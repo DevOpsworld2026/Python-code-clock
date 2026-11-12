@@ -1,0 +1,99 @@
+#!/usr/bin/env python3
+"""
+Simple Python Alarm Clock
+-------------------------
+Set a time and the script will wait until then, then alert you.
+Works on Windows, macOS, and Linux using only the standard library.
+"""
+
+import datetime
+import time
+import sys
+import os
+
+
+def clear_screen():
+    """Clear the terminal screen."""
+    os.system("cls" if os.name == "nt" else "clear")
+
+
+def get_alarm_time():
+    """Ask the user for the alarm time and return a datetime object."""
+    print("=" * 40)
+    print("       PYTHON ALARM CLOCK")
+    print("=" * 40)
+
+    while True:
+        try:
+            hour = int(input("\nEnter hour (0-23): "))
+            if not 0 <= hour <= 23:
+                print("Hour must be between 0 and 23.")
+                continue
+
+            minute = int(input("Enter minute (0-59): "))
+            if not 0 <= minute <= 59:
+                print("Minute must be between 0 and 59.")
+                continue
+
+            break
+        except ValueError:
+            print("Please enter valid numbers.")
+
+    now = datetime.datetime.now()
+    alarm = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+
+    # If the time has already passed today, set it for tomorrow
+    if alarm <= now:
+        alarm += datetime.timedelta(days=1)
+        print(f"\nTime has already passed today. Alarm set for tomorrow.")
+
+    return alarm
+
+
+def play_alert():
+    """Play an alert sound / visual notification."""
+    print("\n" + "!" * 40)
+    print("          ALARM! WAKE UP!")
+    print("!" * 40 + "\n")
+
+    # Terminal bell (works on most systems)
+    for _ in range(10):
+        print("\a", end="", flush=True)  # \a is the bell character
+        time.sleep(0.5)
+
+    # Extra visual flash
+    for i in range(5):
+        print("\r*** ALARM ***" if i % 2 == 0 else "\r             ", end="", flush=True)
+        time.sleep(0.4)
+    print()
+
+
+def main():
+    alarm_time = get_alarm_time()
+
+    print(f"\nAlarm set for: {alarm_time.strftime('%Y-%m-%d %H:%M')}")
+    print("Waiting... (Press Ctrl+C to cancel)\n")
+
+    try:
+        while True:
+            now = datetime.datetime.now()
+            remaining = alarm_time - now
+
+            if remaining.total_seconds() <= 0:
+                play_alert()
+                break
+
+            # Show countdown every second
+            hours, rem = divmod(int(remaining.total_seconds()), 3600)
+            minutes, seconds = divmod(rem, 60)
+            print(f"\rTime left: {hours:02d}:{minutes:02d}:{seconds:02d}", end="", flush=True)
+
+            time.sleep(1)
+
+    except KeyboardInterrupt:
+        print("\n\nAlarm cancelled.")
+        sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()
