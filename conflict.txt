@@ -1,7 +1,7 @@
 This tool converts multi-line text to a single line?
 Yep. This tool takes text containing paragraph breaks, single line breaks, or a combination of both, and compresses it into a single continuous line. Paste your text into the input box and the converted result will appear instantly in the output box below.
 
-Where does this single line compression prove to
+i have changed this line newly?
 
 What types of plain text line breaks does the tool handle?
 The tool processes all common line break formats — single line breaks, double line breaks used to separate paragraphs, and mixed formatting where both types appear in the same body of text. Regardless of the input format, the result is one clean, unbroken line of text.
